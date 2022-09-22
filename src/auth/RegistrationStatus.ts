@@ -1,4 +1,4 @@
-export interface RegistrationStatus {  
-    success: boolean;  
-    message: string;
+export interface RegistrationStatus {
+  success: boolean;
+  message: string;
 }
