@@ -6,12 +6,13 @@ import { User } from './entity/user.entity';
 import { UserService } from './user.service';
 import bcrypt from 'bcrypt';
 import { CreateUserDto } from './dtos/CreateUser.dto';
+import { Repository } from 'typeorm';
 
 describe('UserService', () => {
   let service: UserService;
-  let fakeUsersService: Partial<UserService>;
+  let fakeUsersService: Repository<User>;
   beforeEach(async () => {
-    fakeUsersService = {};
+    // fakeUsersService = {};
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
@@ -86,8 +87,23 @@ describe('UserService', () => {
       password: 'asdfwfewe',
       email: 'a@a.com',
     };
+    const usr: User = {
+      username: 'youdssdfsuf',
+      password: 'asdfwfewe',
+      email: 'a@a.com',
+      id: 1,
+      logInsert: function (): void {
+        throw new Error('Function not implemented.');
+      },
+      logUpdate: function (): void {
+        throw new Error('Function not implemented.');
+      },
+      logRemove: function (): void {
+        throw new Error('Function not implemented.');
+      },
+    };
 
-    fakeUsersService.findOne = async () => Promise.resolve(0);
+    fakeUsersService.findOne = async () => Promise.resolve(usr);
     fakeUsersService.create = async () => {
       return await Promise.resolve(dto);
     };
