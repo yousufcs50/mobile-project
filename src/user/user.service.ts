@@ -18,7 +18,7 @@ export class UserService {
   async findOne(options?: object) {
     const user = await this.userRepo.findOne(options);
     return toUserDto(user) || 0;
-  }
+  } 
 
   async findByLogin({ username, password }: LoginUserDto) {
     const user = await this.userRepo.findOne({ where: { username } });
@@ -42,7 +42,7 @@ export class UserService {
   async create(userDto: CreateUserDto): Promise<UserDto> {
     let { username, password, email } = userDto;
     const userInDb = await this.userRepo.findOne({
-      where: { username },
+      where: { username: username },
     });
     if (password.length < 8) {
       throw new BadRequestException('Password too short');
@@ -59,7 +59,10 @@ export class UserService {
     const user = this.userRepo.create({ username, password, email });
     try {
       await this.userRepo.save(user);
-    } catch (err) {}
+    } catch (err) {
+      //throw error
+      console.log('err', err);
+    }
     return toUserDto(user);
   }
 }

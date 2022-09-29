@@ -3,7 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './locat.strategy';
+import { LocalStrategy } from './local.strategy';
 import { User } from '../user/entity/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateUserDto } from '../user/dtos/CreateUser.dto';

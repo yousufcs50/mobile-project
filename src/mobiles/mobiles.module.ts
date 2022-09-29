@@ -8,12 +8,12 @@ import { CategoryService } from './category.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { LocalStrategy } from 'src/auth/locat.strategy';
-import { AuthService } from 'src/auth/auth.service';
-import { UserService } from 'src/user/user.service';
-import { UsersModule } from 'src/user/user.module';
-import { APP_GUARD } from '@nestjs/core';
+import { JwtStrategy } from '../auth/jwt.strategy';
+import { LocalStrategy } from '../auth/local.strategy';
+import { AuthService } from '../auth/auth.service';
+import { UserService } from '../user/user.service';
+import { UsersModule } from '../user/user.module';
+
 
 @Module({
   imports: [
