@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { LocalStrategy } from './locat.strategy';
+import { LocalStrategy } from './local.strategy';
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({
@@ -20,7 +20,7 @@ import { APP_GUARD } from '@nestjs/core';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: process.env.KEY,
+        secret: 'abcd',
         expiresIn: '90s',
       }),
     }),

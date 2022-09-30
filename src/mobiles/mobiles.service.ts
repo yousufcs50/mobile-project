@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Category } from './category.entity';
 import { CreateMobileDto } from './dtos/createmobile.dto';
 import { Mobile } from './mobiles.entity';
@@ -6,6 +10,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { DeleteDto } from './dtos/delete.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class MobilesService {
@@ -16,23 +21,24 @@ export class MobilesService {
   async createMobile(
     CreateMobileDto: CreateMobileDto,
     categories: Array<Category>, // Make the param accept list of categories
-  ) {
+  ): Promise<Mobile> {
     const title: string = CreateMobileDto.title;
     const text_context: string = CreateMobileDto.text_context;
     const is_private: boolean = CreateMobileDto.is_private;
 
-    const newItem = {
+    const newItem = this.mobileRepo.create({
       is_private,
       title,
       text_context,
       categories,
-    };
+    });
+
     try {
       await this.mobileRepo.save(newItem);
     } catch (err) {
-      return new BadRequestException('Mobile already exists');
+      throw new BadRequestException('Mobile already exists');
     }
-    return newItem as Mobile;
+    return newItem;
   }
 
   async Deletephone(dto: DeleteDto): Promise<string> {
@@ -46,7 +52,7 @@ export class MobilesService {
       })
       .execute();
     if (execute.affected == 0 || !execute) {
-      return 'unable to delete id or title';
+      throw new NotFoundException('unable to delete id or title');
     }
 
     return `deleted mobile with id:${dto.id || dto.title}`;

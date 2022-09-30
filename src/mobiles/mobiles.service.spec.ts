@@ -12,7 +12,6 @@ import { MobilesService } from './mobiles.service';
 describe('MobilesService', () => {
   let service: MobilesService;
   let categoryservice: Partial<CategoryService>;
-  let mobilesservice: Partial<MobilesService>;
   let mobileRepo: Repository<Mobile>;
   beforeEach(async () => {
     const categoriesList: Category[] = [];
@@ -27,17 +26,6 @@ describe('MobilesService', () => {
         return Promise.resolve(categoriesList);
       },
     };
-    mobilesservice = {
-      createMobile: (Mdto: CreateMobileDto, categories: Category[]) => {
-        const mobile: Mobile = {
-          ...Mdto,
-          categories,
-          mobile_id: Math.floor(Math.random() * 999999),
-        };
-        return Promise.resolve(mobile);
-      },
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MobilesService,
@@ -48,7 +36,7 @@ describe('MobilesService', () => {
         },
         {
           provide: getRepositoryToken(Mobile),
-          useValue: mobilesservice,
+          useValue: mobileRepo,
         },
         {
           provide: getRepositoryToken(Mobile),
@@ -102,7 +90,7 @@ describe('MobilesService', () => {
       categories,
       mobile_id: Math.floor(Math.random() * 999999),
     };
-    mobilesservice.createMobile = async () => Promise.resolve(mobile as Mobile);
+    service.createMobile = async () => Promise.resolve(mobile as Mobile);
     const dto: DeleteDto = {
       id: Math.floor(Math.random() * 999999),
       title: 'afasdfsdf',
@@ -131,8 +119,10 @@ describe('MobilesService', () => {
       categories,
       mobile_id: Math.floor(Math.random() * 999999),
     };
-    mobilesservice.createMobile = async () => Promise.resolve(mobile as Mobile);
+    const mock = jest.spyOn(mobileRepo, 'save');
+    mock.mockImplementation(() => Promise.resolve(mobile));
     const li: [Category] = [cat];
+
     const result = await service.createMobile(Mdto, categories);
     const TestMobile = {
       is_private: false,
@@ -143,37 +133,6 @@ describe('MobilesService', () => {
     expect(result).toEqual(TestMobile);
   });
 
-  it('doesnt create a mobile that doesnt exist', async () => {
-    const categories: Category[] = [];
-    const num = Math.floor(Math.random() * 999999);
-    const cat = {
-      id: num,
-      category: num.toString(),
-    } as unknown as Category;
-    categories.push(cat);
-
-    const Mdto: CreateMobileDto = {
-      is_private: false,
-      title: 'fsdlfnsdifn',
-      text_context: 'wfniweniw',
-      category: [],
-    };
-    const mobile: Mobile = {
-      ...Mdto,
-      categories,
-      mobile_id: Math.floor(Math.random() * 999999),
-    };
-
-    mobilesservice.createMobile = async () => Promise.resolve(mobile as Mobile);
-    const mock = jest.spyOn(service, 'createMobile'); // spy on foo
-    mock.mockImplementation(() =>
-      Promise.resolve(new BadRequestException('Mobile already exists')),
-    ); // replace implementation
-    const result = await service.createMobile(Mdto, categories);
-
-    const expectedValue = new BadRequestException('Mobile already exists');
-    expect(result).toEqual(expectedValue);
-  });
 
   it('public listings', async () => {
     expect(await service.getPrivatelistings()).toBeTruthy();

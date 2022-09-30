@@ -8,7 +8,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { BadRequestException } from '@nestjs/common';
 import { LoginUserDto } from '../user/dtos/login.dto';
 import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './locat.strategy';
+import { LocalStrategy } from './local.strategy';
 import { doesNotMatch } from 'assert';
 import { UserDto } from '../user/dtos/User.dto';
 import { toUserDto } from '../user/touserdto';

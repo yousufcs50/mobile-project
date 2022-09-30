@@ -172,6 +172,7 @@ describe('MobilesController', () => {
       return '';
     };
   });
+
   it('categories not defined', async () => {
     const dto: CreateMobileDto = {
       is_private: true,

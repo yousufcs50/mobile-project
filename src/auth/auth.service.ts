@@ -32,15 +32,16 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto) {
     // find user in db
     const user = await this.usersService.findByLogin(loginUserDto);
+
     if (user == 0) {
       if (user == 0) {
-        return new BadRequestException('user not found');
+        throw new BadRequestException('user not found');
       }
     }
     // generate and sign token
     const token = this._createToken(user);
     if (!token) {
-      return new BadRequestException('token not found');
+      throw new BadRequestException('token not found');
     }
 
     return {

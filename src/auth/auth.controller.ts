@@ -18,12 +18,19 @@ import { RegistrationStatus } from './RegistrationStatus';
 import { LoginUserDto } from '../user/dtos/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @ApiOkResponse({ description: 'user created' })
+  @ApiUnauthorizedResponse({ description: 'unable to add user' })
   public async register(@Body() createUserDto: CreateUserDto) {
     const result: RegistrationStatus = await this.authService.register(
       createUserDto,
@@ -36,8 +43,10 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
+  @ApiOkResponse({ description: 'User Login' })
+  @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
+  @ApiBody({ type: LoginUserDto })
   public async login(@Body() loginUserDto: LoginUserDto) {
-    const token = await this.authService.login(loginUserDto);
-    return token;
+    return await this.authService.login(loginUserDto);
   }
 }
