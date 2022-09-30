@@ -104,9 +104,9 @@ describe('UserService', () => {
     };
 
     fakeUsersService.findOne = async () => Promise.resolve(usr);
-    fakeUsersService.create = async () => {
-      return await Promise.resolve(dto);
-    };
+    // fakeUsersService.create = async () => {
+    //   return await Promise.resolve(dto);
+    // };
     const expected = { id: undefined, username: undefined, email: undefined };
     const result = await service.create(createuserdto);
     expect(result).toEqual(expected);

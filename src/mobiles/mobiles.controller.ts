@@ -49,6 +49,7 @@ export class MobilesController {
   }
 
   @UseGuards(AuthGuard())
+  @ApiOkResponse({ description: 'private mobiles' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @Get('/privatelistings')
   async Getprivate() {
@@ -56,6 +57,7 @@ export class MobilesController {
   }
 
   @Get('/phones')
+  @ApiOkResponse({ description: 'public mobiles' })
   async GetPublicPhones() {
     return this.mobileservice.getPubliclistings();
   }
